@@ -7,24 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Produtos() {
   const [busca, setBusca] = useState("");
-  interface Produto {
-    id: number;
-    nome: string;
-    tipo: string;
-    preco: number;
-    lojista: {
-      nome_loja: string;
-    };
-  }
-
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProdutos();
   }, []);
 
   const fetchProdutos = async () => {
-    const res = await fetch(`/api/produtos?busca=${busca}`);
+    const res = await fetch(`/api/produtos?busca=${busca}&status=ativo`);
     const data = await res.json();
     setProdutos(data);
   };

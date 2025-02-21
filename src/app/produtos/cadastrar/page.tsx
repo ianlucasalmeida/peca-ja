@@ -1,19 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function CadastrarProduto() {
+  const { user } = useAuth();
   const [form, setForm] = useState({
     nome: "",
     descricao: "",
     preco: "",
     tipo: "original",
     imagem: null as File | null,
+    categoriaId: "",
   });
+  const [categorias, setCategorias] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user?.lojista?.id) {
+      fetch(`/api/categorias?lojistaId=${user.lojista.id}`)
+        .then((res) => res.json())
+        .then(setCategorias);
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +35,9 @@ export default function CadastrarProduto() {
     formData.append("descricao", form.descricao);
     formData.append("preco", form.preco);
     formData.append("tipo", form.tipo);
-    formData.append("lojistaId", "1"); // Substitua por ID real do lojista logado
+    formData.append("lojistaId", String(user?.lojista.id));
     if (form.imagem) formData.append("imagem", form.imagem);
+    formData.append("categoriaId", form.categoriaId);
 
     const res = await fetch("/api/produtos", {
       method: "POST",
@@ -33,7 +47,7 @@ export default function CadastrarProduto() {
   };
 
   return (
-    <div>
+    <div className="p-8">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Cadastrar Produto</CardTitle>
@@ -67,17 +81,35 @@ export default function CadastrarProduto() {
             </div>
             <div>
               <Label htmlFor="tipo">Tipo</Label>
-              <select
-                id="tipo"
-                value={form.tipo}
-                onChange={(e) => setForm({ ...form, tipo: e.target.value })}
-                className="w-full p-2 border rounded"
+              <Select value={form.tipo} onValueChange={(value) => setForm({ ...form, tipo: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="original">Original</SelectItem>
+                  <SelectItem value="paralela">Paralela</SelectItem>
+                  <SelectItem value="remanufaturada">Remanufaturada</SelectItem>
+                  <SelectItem value="desmanche">Desmanche</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="categoria">Categoria</Label>
+              <Select
+                value={form.categoriaId}
+                onValueChange={(value) => setForm({ ...form, categoriaId: value })}
               >
-                <option value="original">Original</option>
-                <option value="paralela">Paralela</option>
-                <option value="remanufaturada">Remanufaturada</option>
-                <option value="desmanche">Desmanche</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categorias.map((cat) => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>
+                      {cat.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="imagem">Imagem</Label>

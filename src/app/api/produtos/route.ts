@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       tipo,
       lojista_id: lojistaId,
       imagem_url,
+      status: "ativo", // Novo produto começa como ativo
     },
   });
 
@@ -40,9 +41,16 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const lojistaId = Number(searchParams.get("lojistaId"));
+  const busca = searchParams.get("busca") || "";
+  const status = searchParams.get("status") || null;
 
   const produtos = await prisma.peca.findMany({
-    where: { lojista_id: lojistaId },
+    where: {
+      ...(lojistaId ? { lojista_id: lojistaId } : {}),
+      nome: { contains: busca, mode: "insensitive" },
+      ...(status ? { status } : {}), // Filtra por status se fornecido
+    },
+    include: { lojista: true },
   });
 
   return NextResponse.json(produtos, { status: 200 });

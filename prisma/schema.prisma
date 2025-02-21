@@ -47,10 +47,11 @@ model Lojista {
   nome_loja       String
   cnpj            String?   @unique
   contato_loja    String?
-  imagem_url      String?   // Imagem da loja
-endereco_loja_id Int? @unique
-endereco_loja   Endereco? @relation("LojistaEndereco", fields: [endereco_loja_id], references: [id])
-pecas           Peca[]
+  imagem_url      String?
+  metodosPagamento Json?    // Novo campo para métodos de pagamento
+  endereco_loja_id Int? @unique
+  endereco_loja   Endereco? @relation("LojistaEndereco", fields: [endereco_loja_id], references: [id])
+  pecas           Peca[]
   pedidos         Pedido[]  @relation("LojistaPedidos")
   avaliacoes      Avaliacao[] @relation("LojistaAvaliacoes")
 }
@@ -72,7 +73,8 @@ model Peca {
   categoria    Categoria?  @relation(fields: [categoria_id], references: [id], onDelete: SetNull)
   lojista_id   Int
   lojista      Lojista     @relation(fields: [lojista_id], references: [id], onDelete: Cascade)
-  imagem_url   String?     // Imagem do produto
+  imagem_url   String?
+  status       String      @default("ativo") // Novo campo: ativo, pausado, em_falta
   criado_em    DateTime    @default(now())
   atualizado_em DateTime   @default(now())
   estoque      Estoque?

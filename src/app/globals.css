@@ -8,73 +8,109 @@ body {
 
 @layer base {
   :root {
+    /* Tema claro */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 0 0% 10%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 0 0% 10%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --popover-foreground: 0 0% 10%;
+    
+    /* Laranja como cor primária */
+    --primary: 24 100% 50%;    /* #FF6700 */
+    --primary-foreground: 0 0% 100%;
+    
+    /* Azul como cor secundária */
+    --secondary: 210 100% 40%; /* #0077CC */
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Cinza para elementos neutros */
+    --muted: 0 0% 65%;        /* #A6A6A6 */
+    --muted-foreground: 0 0% 45%;
+    
+    /* Azul claro para accent */
+    --accent: 210 100% 60%;   /* #3399FF */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 45%;       /* #737373 */
+    --input: 0 0% 45%;
+    --ring: 24 100% 50%;      /* Laranja para focus rings */
+    
+    /* Cores para gráficos */
+    --chart-1: 24 100% 50%;   /* Laranja */
+    --chart-2: 210 100% 40%;  /* Azul */
+    --chart-3: 0 0% 65%;      /* Cinza */
+    --chart-4: 24 60% 40%;    /* Laranja Escuro */
+    --chart-5: 210 60% 30%;   /* Azul Escuro */
+    
+    /* Configurações da Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 24 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 210 100% 40%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 45%;
+    --sidebar-ring: 24 100% 50%;
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Tema escuro */
+    --background: 0 0% 10%;    /* #1A1A1A */
+    --foreground: 0 0% 90%;
+    
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 90%;
+    
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 90%;
+    
+    /* Mantendo laranja como primária, mas mais brilhante */
+    --primary: 24 100% 55%;    /* Laranja mais brilhante */
+    --primary-foreground: 0 0% 100%;
+    
+    /* Azul mais brilhante para melhor contraste */
+    --secondary: 210 100% 45%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Cinza mais escuro para elementos neutros */
+    --muted: 0 0% 25%;
+    --muted-foreground: 0 0% 65%;
+    
+    /* Azul mais brilhante para accent */
+    --accent: 210 100% 65%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 24 100% 55%;
+    
+    /* Cores para gráficos em modo escuro */
+    --chart-1: 24 100% 55%;   /* Laranja mais brilhante */
+    --chart-2: 210 100% 45%;  /* Azul mais brilhante */
+    --chart-3: 0 0% 65%;      /* Cinza médio */
+    --chart-4: 24 70% 45%;    /* Laranja médio */
+    --chart-5: 210 70% 35%;   /* Azul médio */
+    
+    /* Sidebar em modo escuro */
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 24 100% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 100% 45%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 24 100% 55%;
   }
 }
 
@@ -87,7 +123,24 @@ body {
   }
 }
 
-
+/* Utilidades para gradientes */
+@layer utilities {
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-[#FF6700] to-[#0077CC];
+  }
+  
+  .bg-gradient-neutral {
+    @apply bg-gradient-to-r from-[#A6A6A6] to-[#1A1A1A];
+  }
+  
+  .hover-primary {
+    @apply hover:bg-[#FF8533] transition-colors duration-200;
+  }
+  
+  .hover-secondary {
+    @apply hover:bg-[#3399FF] transition-colors duration-200;
+  }
+}
 
 @layer base {
   * {

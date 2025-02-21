@@ -1,32 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardLojista() {
-  interface LojistaData {
-    lojista: {
-      nome_loja: string;
-    };
-    metricas: {
-      totalPedidos: number;
-      vendasMes: number;
-      estoqueDisponivel: number;
-    };
-  }
-
-  const [data, setData] = useState<LojistaData | null>(null);
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Simulando o ID do usuário logado (você pode passar via contexto ou query)
-    const usuarioId = 1; // Substitua por lógica de autenticação real
-    fetch(`/api/dashboard/lojista?usuarioId=${usuarioId}`)
-      .then((res) => res.json())
-      .then(setData);
-  }, []);
+    if (!user || !user.id) {
+      setError("Usuário não autenticado");
+      return;
+    }
 
-  if (!data) return <div>Carregando...</div>;
+    fetch(`/api/dashboard/lojista?usuarioId=${user.id}`)
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.error) {
+          setError(response.error);
+        } else {
+          setData(response);
+        }
+      })
+      .catch((err) => setError("Erro ao carregar dados"));
+  }, [user]);
+
+  if (error) return <div className="min-h-screen p-8">Erro: {error}</div>;
+  if (!data) return <div className="min-h-screen p-8">Carregando...</div>;
+  if (!data.lojista) return <div className="min-h-screen p-8">Nenhuma loja associada</div>;
 
   return (
     <div className="min-h-screen p-8">
