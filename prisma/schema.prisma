@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           Int       @id @default(autoincrement())
+  nome         String
+  email        String    @unique
+  senha_hash   String
+  telefone     String?
+  is_logista   Boolean   @default(false)
+  imagem_url   String?   // Imagem do usuário
+  criado_em    DateTime  @default(now())
+  atualizado_em DateTime @default(now())
+  enderecos    Endereco[]
+  lojista      Lojista?
+  pedidos      Pedido[]  @relation("ClientePedidos")
+  avaliacoes   Avaliacao[] @relation("ClienteAvaliacoes")
+}
+
+model Endereco {
+  id            Int       @id @default(autoincrement())
+  usuario_id    Int
+  usuario       Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  rua           String
+  numero        String?
+  complemento   String?
+  bairro        String?
+  cidade        String
+  estado        String
+  cep           String
+  latitude      Float?
+  longitude     Float?
+  lojista       Lojista?  @relation("LojistaEndereco")
+  pedidos       Pedido[]  @relation("EnderecoEntrega")
+}
+
+model Lojista {
+  id              Int       @id @default(autoincrement())
+  usuario_id      Int       @unique
+  usuario         Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  nome_loja       String
+  cnpj            String?   @unique
+  contato_loja    String?
+  imagem_url      String?   // Imagem da loja
+endereco_loja_id Int? @unique
+endereco_loja   Endereco? @relation("LojistaEndereco", fields: [endereco_loja_id], references: [id])
+pecas           Peca[]
+  pedidos         Pedido[]  @relation("LojistaPedidos")
+  avaliacoes      Avaliacao[] @relation("LojistaAvaliacoes")
+}
+
+model Categoria {
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  descricao String?
+  pecas     Peca[]
+}
+
+model Peca {
+  id           Int         @id @default(autoincrement())
+  nome         String
+  descricao    String?
+  preco        Float
+  tipo         String
+  categoria_id Int?
+  categoria    Categoria?  @relation(fields: [categoria_id], references: [id], onDelete: SetNull)
+  lojista_id   Int
+  lojista      Lojista     @relation(fields: [lojista_id], references: [id], onDelete: Cascade)
+  imagem_url   String?     // Imagem do produto
+  criado_em    DateTime    @default(now())
+  atualizado_em DateTime   @default(now())
+  estoque      Estoque?
+  peca_veiculos PecaVeiculo[]
+  pedido_itens  PedidoItem[]
+  avaliacoes    Avaliacao[]
+}
+
+model Estoque {
+  id               Int      @id @default(autoincrement())
+  peca_id          Int      @unique
+  peca             Peca     @relation(fields: [peca_id], references: [id], onDelete: Cascade)
+  quantidade       Int
+  ultima_atualizacao DateTime @default(now())
+}
+
+model Veiculo {
+  id           Int          @id @default(autoincrement())
+  marca        String
+  modelo       String
+  ano          Int
+  peca_veiculos PecaVeiculo[]
+  @@unique([marca, modelo, ano])
+}
+
+model PecaVeiculo {
+  peca_id    Int
+  veiculo_id Int
+  peca       Peca    @relation(fields: [peca_id], references: [id], onDelete: Cascade)
+  veiculo    Veiculo @relation(fields: [veiculo_id], references: [id], onDelete: Cascade)
+  @@id([peca_id, veiculo_id])
+}
+
+model Pedido {
+  id               Int         @id @default(autoincrement())
+  cliente_id       Int
+  cliente          Usuario     @relation("ClientePedidos", fields: [cliente_id], references: [id], onDelete: Cascade)
+  lojista_id       Int
+  lojista          Lojista     @relation("LojistaPedidos", fields: [lojista_id], references: [id], onDelete: Cascade)
+  endereco_entrega_id Int?
+  endereco_entrega Endereco?   @relation("EnderecoEntrega", fields: [endereco_entrega_id], references: [id])
+  status           String      @default("pendente")
+  total            Float
+  criado_em        DateTime    @default(now())
+  atualizado_em    DateTime    @default(now())
+  itens            PedidoItem[]
+  pagamento        Pagamento?
+  avaliacoes       Avaliacao[]
+}
+
+model PedidoItem {
+  id            Int    @id @default(autoincrement())
+  pedido_id     Int
+  pedido        Pedido @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+  peca_id       Int
+  peca          Peca   @relation(fields: [peca_id], references: [id], onDelete: Cascade)
+  quantidade    Int
+  preco_unitario Float
+}
+
+model Pagamento {
+  id            Int     @id @default(autoincrement())
+  pedido_id     Int     @unique
+  pedido        Pedido  @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+  metodo        String
+  status        String  @default("pendente")
+  transacao_id  String?
+  data_pagamento DateTime?
+}
+
+model Avaliacao {
+  id         Int     @id @default(autoincrement())
+  pedido_id  Int
+  pedido     Pedido  @relation(fields: [pedido_id], references: [id], onDelete: Cascade)
+  cliente_id Int
+  cliente    Usuario @relation("ClienteAvaliacoes", fields: [cliente_id], references: [id], onDelete: Cascade)
+  lojista_id Int
+  lojista    Lojista @relation("LojistaAvaliacoes", fields: [lojista_id], references: [id], onDelete: Cascade)
+  peca_id    Int
+  peca       Peca    @relation(fields: [peca_id], references: [id], onDelete: Cascade)
+  nota       Int
+  comentario String?
+  criado_em  DateTime @default(now())
+}
